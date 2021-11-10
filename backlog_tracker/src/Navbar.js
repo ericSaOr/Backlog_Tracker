@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom';
+import React from 'react';
+import { NavLink, useHistory } from 'react-router-dom';
 
 const linkStyles = {
 	width: '100px',
@@ -9,7 +10,20 @@ const linkStyles = {
 	color: 'white'
 };
 
-function NavBar() {
+function NavBar({ handleSignOut }) {
+	const history = useHistory();
+
+	
+	function logOut() {
+		fetch('/logout', {
+			method: 'DELETE'
+		}).then(
+			handleSignOut(),
+			history.push('/')
+		);
+		return 0;
+	}
+
 	return (
 		<div>
 			<NavLink
@@ -43,6 +57,9 @@ function NavBar() {
 			>
 				About
 			</NavLink>
+			<header>
+				<button onClick={logOut}>Logout</button>
+			</header>
 		</div>
 	);
 }
