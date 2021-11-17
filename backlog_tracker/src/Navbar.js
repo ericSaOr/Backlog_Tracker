@@ -10,22 +10,20 @@ const linkStyles = {
 	color: 'white'
 };
 
-function NavBar({ handleSignOut }) {
+function NavBar({ handleSignOut, user }) {
 	const history = useHistory();
 
-	
 	function logOut() {
 		fetch('/logout', {
 			method: 'DELETE'
-		}).then(
-			handleSignOut(),
-			history.push('/')
-		);
+		}).then(handleSignOut());
 		return 0;
 	}
+	console.log(user);
 
 	return (
 		<div>
+			<h3>Welcome, Username:{user.user_name}!</h3>
 			<NavLink
 				to="/"
 				exact

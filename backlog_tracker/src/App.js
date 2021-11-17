@@ -7,31 +7,30 @@ import NavBar from './Navbar';
 import Profile from './Profile';
 import GameCard from './Gamecard';
 import About from './About';
-import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
-function App() {
+function App({ user }) {
 	const [ errors, setErrors ] = useState(false);
-	const [ user, setUser ] = useState(false);
+	const [ sessionUser, setSessionUser ] = useState(false);
 	const history = useHistory();
-	const [userName, setUsername] = useState('');
-	const [password, setPassword] = useState('');
+	const [ username, setUsername ] = useState('');
+	const [ password, setPassword ] = useState('');
 
 	useEffect(() => {
 		fetch('/me').then((response) => {
 			if (response.ok) {
-				response.json().then((user) => setUser(user));
+				response.json().then((res) => setSessionUser(res));
 			}
 		});
 	}, []);
-	console.log(user);
 
-	if (!user) {
+	if (!sessionUser) {
 		history.push('/');
 	}
 
 	function handleSignOut() {
-		setUsername('');
-		setPassword('');
+		setUsername(null);
+		setPassword(null);
 		return 0;
 	}
 
@@ -44,13 +43,21 @@ function App() {
 	// })
 	// 	.then((response) => response.json())
 	// 	.then((games) => console.log(games));
-
+	console.log(username);
+	console.log(user);
+	console.log(sessionUser);
 	return (
 		<div>
-			<NavBar setUsername={setUsername} setPassword={setPassword} handleSignOut={handleSignOut}/>
+			<NavBar
+				username={username}
+				setUsername={setUsername}
+				setPassword={setPassword}
+				handleSignOut={handleSignOut}
+				user={sessionUser}
+			/>
 			<Switch>
 				<Route exact path="/">
-					<Login setUser={user} setErrors={setErrors} />
+					<Login setErrors={setErrors} setUsername={setUsername} setPassword={setPassword} />
 				</Route>
 				<Route exact path="/signup">
 					<Signup />
@@ -59,7 +66,7 @@ function App() {
 					<Profile />
 				</Route>,
 				<Route exact path="/gamecontainer">
-					<GameContainer />
+					<GameContainer username={username} />
 				</Route>,
 				<Route exact path="/gamecard">
 					<GameCard />

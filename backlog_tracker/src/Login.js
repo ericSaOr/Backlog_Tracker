@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import {useHistory} from 'react-router-dom';
-import App from "./App";
 
 
-function Login({setErrors, setUser}) {
+
+function Login({setErrors}) {
 	const [ username, setUsername ] = useState('');
 	const [ password, setPassword ] = useState('');
+	const [user, setUser] = useState(null);
 	const [ loginErrors, setLoginErrors ] = useState([]);
 	const history = useHistory();
 
@@ -26,8 +27,10 @@ function Login({setErrors, setUser}) {
 			.then((json) => {
 				if (json.error) {
 					setLoginErrors(json.error);
+					history.push("/");
 				} else {
 					setErrors(false);
+					setUser(json);
 					history.push("/gamecontainer")
 					
 				}
@@ -35,7 +38,7 @@ function Login({setErrors, setUser}) {
 		return 0;
 	}
 
-	
+	console.log(user)
 
 	// if ({setUser}===true) return <GameContainer />;
 
