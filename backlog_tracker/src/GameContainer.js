@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Results from './Results';
 
 function GameContainer() {
 	//
@@ -13,9 +14,8 @@ function GameContainer() {
 		e.preventDefault();
 		let slug = searchTerm.split(' ').join('-').toLocaleLowerCase();
 
-		setGameResults([]);
 		fetch(
-			`https://rawg-video-games-database.p.rapidapi.com/games?page_size=1&search${slug}&key=5d0b880d0a3448d5a26a296d0dbf0244`,
+			`https://rawg-video-games-database.p.rapidapi.com/games?page_size=1&search=${slug}&key=5d0b880d0a3448d5a26a296d0dbf0244`,
 			{
 				method: 'GET',
 				headers: {
@@ -25,8 +25,9 @@ function GameContainer() {
 			}
 		)
 			.then((response) => response.json())
-			.then((games) => console.log(games));
+			.then((games) => setGameResults(games));
 	}
+
 	return (
 		<div className="game-search">
 			<h1>Game Search</h1>
@@ -35,6 +36,7 @@ function GameContainer() {
 				<br />
 				<input type="submit" />
 			</form>
+			<Results gameResults={gameResults} />
 		</div>
 	);
 }

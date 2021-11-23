@@ -9,12 +9,14 @@ import GameCard from './Gamecard';
 import About from './About';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
-function App({ user }) {
+function App() {
 	const [ errors, setErrors ] = useState(false);
 	const [ sessionUser, setSessionUser ] = useState(false);
 	const history = useHistory();
 	const [ username, setUsername ] = useState('');
 	const [ password, setPassword ] = useState('');
+	const [ user, setUser ] = useState([]);
+	const [ loginErrors, setLoginErrors ] = useState({});
 
 	useEffect(() => {
 		fetch('/me').then((response) => {
@@ -24,40 +26,69 @@ function App({ user }) {
 		});
 	}, []);
 
-	if (!sessionUser) {
-		history.push('/');
-	}
-
 	function handleSignOut() {
-		setUsername(null);
-		setPassword(null);
+		setSessionUser(false);
+		sessionStorage.clear();
+
 		return 0;
 	}
 
-	// fetch('https://rawg-video-games-database.p.rapidapi.com/games/Xenogears?key=627e46aeb3c04002ba754c38fde257d0', {
-	// 	method: 'GET',
-	// 	headers: {
-	// 		'x-rapidapi-host': 'rawg-video-games-database.p.rapidapi.com',
-	// 		'x-rapidapi-key': '07db0a293emsh92c59a3f091bfe3p173434jsn9ed539e19de8'
-	// 	}
-	// })
-	// 	.then((response) => response.json())
-	// 	.then((games) => console.log(games));
-	console.log(username);
-	console.log(user);
+	function handleSignIn(e) {
+		e.preventDefault();
+		console.log('FIRED');
+		const user = {
+			user_name: username,
+			password
+		};
+		fetch(`/login`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(user)
+		})
+			.then((res) => res.json())
+			.then((json) => {
+				if (json.error) {
+					setLoginErrors(json.error);
+				} else {
+					setErrors(false);
+					setUser(json);
+					window.location.reload(false);
+					//reload page from cache
+				}
+			});
+		return 0;
+	}
 	console.log(sessionUser);
+	console.log(errors);
+
+	function logOut() {
+		fetch('/logout', {
+			method: 'DELETE'
+		}).then(handleSignOut());
+		return 0;
+	}
+
+	{
+		sessionUser ? history.push('/gamecontainer') : history.push('/');
+	}
 	return (
 		<div>
 			<NavBar
-				username={username}
 				setUsername={setUsername}
 				setPassword={setPassword}
 				handleSignOut={handleSignOut}
-				user={sessionUser}
+				sessionUser={sessionUser}
+				logOut={logOut}
 			/>
 			<Switch>
 				<Route exact path="/">
-					<Login setErrors={setErrors} setUsername={setUsername} setPassword={setPassword} />
+					<Login
+						setErrors={setErrors}
+						setUsername={setUsername}
+						setPassword={setPassword}
+						handleSignIn={handleSignIn}
+						user={user}
+					/>
 				</Route>
 				<Route exact path="/signup">
 					<Signup />
@@ -66,7 +97,7 @@ function App({ user }) {
 					<Profile />
 				</Route>,
 				<Route exact path="/gamecontainer">
-					<GameContainer username={username} />
+					<GameContainer />
 				</Route>,
 				<Route exact path="/gamecard">
 					<GameCard />
