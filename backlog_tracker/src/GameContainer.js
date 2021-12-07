@@ -5,10 +5,24 @@ function GameContainer() {
 	//
 	const [ searchTerm, setSearchTerm ] = useState('');
 	const [ gameResults, setGameResults ] = useState([]);
+	const [ game, setGame ] = useState([]);
 
 	function handleChange(e) {
 		setSearchTerm(e.target.value);
 	}
+
+	function handleAddGame(e) {
+		e.preventDefault();
+		const game = { name: gameResults.results.name, image: gameResults.results.background_image };
+		fetch(`/games`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(game)
+		})
+			.then((res) => res.json())
+			.then((json) => setGame(json));
+	}
+	console.log(game);
 
 	function onSubmit(e) {
 		e.preventDefault();
@@ -36,7 +50,7 @@ function GameContainer() {
 				<br />
 				<input type="submit" />
 			</form>
-			<Results gameResults={gameResults} />
+			<Results handleAddGame={handleAddGame} gameResults={gameResults} />
 		</div>
 	);
 }

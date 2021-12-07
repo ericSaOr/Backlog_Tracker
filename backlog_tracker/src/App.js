@@ -58,6 +58,7 @@ function App() {
 			});
 		return 0;
 	}
+
 	console.log(sessionUser);
 	console.log(errors);
 
@@ -70,7 +71,9 @@ function App() {
 
 	{
 		sessionUser ? history.push('/gamecontainer') : history.push('/');
+		//conditionally rendering components based on the session *dope*
 	}
+
 	return (
 		<div>
 			<NavBar
