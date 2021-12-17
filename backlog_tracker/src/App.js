@@ -7,9 +7,10 @@ import NavBar from './Navbar';
 import Profile from './Profile';
 import GameCard from './Gamecard';
 import About from './About';
+import GameViewer from './GameViewer';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
-function App() {
+function App({ games }) {
 	const [ errors, setErrors ] = useState(false);
 	const [ sessionUser, setSessionUser ] = useState(false);
 	const history = useHistory();
@@ -71,7 +72,7 @@ function App() {
 
 	{
 		sessionUser ? history.push('/gamecontainer') : history.push('/');
-		//conditionally rendering components based on the session *dope*
+		//conditionally rendering components based on the session.
 	}
 
 	return (
@@ -100,13 +101,16 @@ function App() {
 					<Profile />
 				</Route>,
 				<Route exact path="/gamecontainer">
-					<GameContainer />
+					<GameContainer sessionUser={sessionUser} />
 				</Route>,
 				<Route exact path="/gamecard">
 					<GameCard />
 				</Route>
 				<Route exact path="/About">
 					<About />
+				</Route>
+				<Route exact path="/gameviewer">
+					<GameViewer games={games} />
 				</Route>
 			</Switch>
 		</div>

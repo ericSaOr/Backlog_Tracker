@@ -1,27 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Results from './Results';
 
-function GameContainer() {
+function GameContainer({ sessionUser }) {
 	//
 	const [ searchTerm, setSearchTerm ] = useState('');
-	const [ gameResults, setGameResults ] = useState([]);
+	const [ gameResults, setGameResults ] = useState({});
 	const [ game, setGame ] = useState([]);
 
 	function handleChange(e) {
 		setSearchTerm(e.target.value);
 	}
 
-	function handleAddGame(e) {
-		e.preventDefault();
-		const game = { name: gameResults.results.name, image: gameResults.results.background_image };
-		fetch(`/games`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(game)
-		})
-			.then((res) => res.json())
-			.then((json) => setGame(json));
-	}
 	console.log(game);
 
 	function onSubmit(e) {
@@ -46,11 +35,11 @@ function GameContainer() {
 		<div className="game-search">
 			<h1>Game Search</h1>
 			<form onSubmit={onSubmit}>
-				<input type="text" value={searchTerm} onChange={handleChange} />
+				<input type="text" value={searchTerm} onChange={handleChange} setGame={setGame} game={game} />
 				<br />
 				<input type="submit" />
 			</form>
-			<Results handleAddGame={handleAddGame} gameResults={gameResults} />
+			<Results gameResults={gameResults} sessionUser={sessionUser} />
 		</div>
 	);
 }

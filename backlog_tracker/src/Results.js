@@ -1,6 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-function Results({ gameResults, handleAddGame }) {
+function Results({ gameResults }) {
+	const [ gameTitle, setGameTitle ] = useState('');
+	const [ gameImage, setGameImage ] = useState('');
+	const [ games, setGames ] = useState([]);
+
+	const history = useHistory();
+	console.log(gameResults.results);
+
+	function handleAddGame(e) {
+		e.preventDefault();
+
+		fetch(`/games`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				title: `${gameResults.results.map((gameResult) => gameResult.name)}`,
+
+				image: `${gameResults.results.map((gameResult) => gameResult.background_image)}`
+			})
+		})
+			.then((res) => res.json())
+			.then((json) => setGames(json), history.push('/gameviewer'));
+	}
+
+	console.log(games);
 	return (
 		<div className="game-results-container">
 			{gameResults.results ? (
@@ -20,9 +45,3 @@ function Results({ gameResults, handleAddGame }) {
 	);
 }
 export default Results;
-// gameResults={gameResults}
-// 				handleAddGame={handleAddGame}
-// 				setGame={setGame}
-// 				game={game}
-// 				setGameimage={setGameimage}
-// 				image={image}
