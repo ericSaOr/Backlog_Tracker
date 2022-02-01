@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Results from './Results';
+import { useHistory } from 'react-router-dom';
 
-function GameContainer({ sessionUser }) {
+function GameContainer({ sessionUser, handleAddGame, gameResults, setGameResults }) {
 	//
 	const [ searchTerm, setSearchTerm ] = useState('');
-	const [ gameResults, setGameResults ] = useState({});
-	const [ game, setGame ] = useState([]);
+	const [ game, setGame ] = useState({});
+	const history = useHistory();
 
 	function handleChange(e) {
 		setSearchTerm(e.target.value);
@@ -31,15 +32,38 @@ function GameContainer({ sessionUser }) {
 			.then((games) => setGameResults(games));
 	}
 
+	function handleAddGame(e) {
+		e.preventDefault();
+
+		fetch(`/games`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				title: `${gameResults.results.map((gameResult) => gameResult.name)}`,
+
+				image: `${gameResults.results.map((gameResult) => gameResult.background_image)}`
+			})
+		})
+			.then((res) => res.json())
+			.then((json) => setGame(json));
+		history.push('gameviewer');
+	}
+	console.log(game);
 	return (
 		<div className="game-search">
 			<h1>Game Search</h1>
 			<form onSubmit={onSubmit}>
-				<input type="text" value={searchTerm} onChange={handleChange} setGame={setGame} game={game} />
+				<input type="text" value={searchTerm} onChange={handleChange} />
 				<br />
 				<input type="submit" />
 			</form>
-			<Results gameResults={gameResults} sessionUser={sessionUser} />
+			<Results
+				gameResults={gameResults}
+				sessionUser={sessionUser}
+				game={game}
+				setGame={setGame}
+				handleAddGame={handleAddGame}
+			/>
 		</div>
 	);
 }

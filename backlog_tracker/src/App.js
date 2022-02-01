@@ -1,5 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import Login from './Login';
 import Signup from './Signup';
 import GameContainer from './GameContainer';
@@ -8,9 +9,8 @@ import Profile from './Profile';
 import GameCard from './Gamecard';
 import About from './About';
 import GameViewer from './GameViewer';
-import { Route, Switch, useHistory } from 'react-router-dom';
 
-function App({ games }) {
+function App({ game, setGame }) {
 	const [ errors, setErrors ] = useState(false);
 	const [ sessionUser, setSessionUser ] = useState(false);
 	const history = useHistory();
@@ -18,6 +18,7 @@ function App({ games }) {
 	const [ password, setPassword ] = useState('');
 	const [ user, setUser ] = useState([]);
 	const [ loginErrors, setLoginErrors ] = useState({});
+	const [ gameResults, setGameResults ] = useState({});
 
 	useEffect(() => {
 		fetch('/me').then((response) => {
@@ -60,8 +61,7 @@ function App({ games }) {
 		return 0;
 	}
 
-	console.log(sessionUser);
-	console.log(errors);
+	console.log(gameResults);
 
 	function logOut() {
 		fetch('/logout', {
@@ -101,7 +101,11 @@ function App({ games }) {
 					<Profile />
 				</Route>,
 				<Route exact path="/gamecontainer">
-					<GameContainer sessionUser={sessionUser} />
+					<GameContainer
+						sessionUser={sessionUser}
+						gameResults={gameResults}
+						setGameResults={setGameResults}
+					/>
 				</Route>,
 				<Route exact path="/gamecard">
 					<GameCard />
@@ -110,7 +114,12 @@ function App({ games }) {
 					<About />
 				</Route>
 				<Route exact path="/gameviewer">
-					<GameViewer games={games} />
+					<GameViewer
+						game={game}
+						gameResults={gameResults}
+						setGameResults={setGameResults}
+						sessionUser={sessionUser}
+					/>
 				</Route>
 			</Switch>
 		</div>
