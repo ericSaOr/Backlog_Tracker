@@ -2,14 +2,19 @@ import React, { useState } from 'react';
 import Results from './Results';
 import { useHistory } from 'react-router-dom';
 
-function GameContainer({ sessionUser, handleAddGame, gameResults, setGameResults }) {
+function GameContainer({ sessionUser, handleAddGame, gameResults, setGameResults, game, setGame, setIsGame, isGame }) {
 	//
 	const [ searchTerm, setSearchTerm ] = useState('');
-	const [ game, setGame ] = useState({});
+	const [ gamePresent, setGamePresent ] = useState(false);
+
 	const history = useHistory();
 
 	function handleChange(e) {
 		setSearchTerm(e.target.value);
+	}
+
+	function isGamePresent() {
+		setGamePresent(true);
 	}
 
 	console.log(game);
@@ -32,9 +37,7 @@ function GameContainer({ sessionUser, handleAddGame, gameResults, setGameResults
 			.then((games) => setGameResults(games));
 	}
 
-	function handleAddGame(e) {
-		e.preventDefault();
-
+	function handleAddGame() {
 		fetch(`/games`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -46,8 +49,13 @@ function GameContainer({ sessionUser, handleAddGame, gameResults, setGameResults
 		})
 			.then((res) => res.json())
 			.then((json) => setGame(json));
-		history.push('gameviewer');
+		setIsGame(true);
 	}
+
+	{
+		!isGame ? console.log('No Game') : history.push('/gameviewer');
+	}
+
 	console.log(game);
 	return (
 		<div className="game-search">
@@ -57,13 +65,7 @@ function GameContainer({ sessionUser, handleAddGame, gameResults, setGameResults
 				<br />
 				<input type="submit" />
 			</form>
-			<Results
-				gameResults={gameResults}
-				sessionUser={sessionUser}
-				game={game}
-				setGame={setGame}
-				handleAddGame={handleAddGame}
-			/>
+			<Results gameResults={gameResults} sessionUser={sessionUser} game={game} handleAddGame={handleAddGame} />
 		</div>
 	);
 }

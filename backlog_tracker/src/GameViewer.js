@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 
-function GameViewer({ gameResults, sessionUser, game }) {
+function GameViewer({ gameResults, game, sessionUser }) {
 	const [ levelData, setLevelData ] = useState('');
 	const [ gameImage, setGameImage ] = useState('');
+	const [ gameNote, setGameNote ] = useState('');
 	const [ gameCard, setGamecard ] = useState([]);
+	const gameId = game.id;
+	console.log(gameId);
 
-	// console.log(gameResults.results.id);
-	console.log(sessionUser);
-
+	console.log(game);
 	function handleImageInput(e) {
 		setGameImage(e.target.value);
 	}
 
 	function handleLevelData(e) {
 		setLevelData(e.target.value);
+	}
+
+	function handleGameNote(e) {
+		setGameNote(e.target.value);
 	}
 
 	function handleAddGameCard(e) {
@@ -29,7 +34,9 @@ function GameViewer({ gameResults, sessionUser, game }) {
 
 				level_data: `${levelData}`,
 
-				game_id: game.id,
+				note: `${gameNote}`,
+
+				game_id: gameId,
 
 				user_id: sessionUser.id
 			})
@@ -37,7 +44,7 @@ function GameViewer({ gameResults, sessionUser, game }) {
 			.then((res) => res.json())
 			.then((json) => setGamecard(json));
 	}
-
+	console.log(gameCard);
 	return (
 		<div className="gamecard-container">
 			{gameResults.results ? (
@@ -46,8 +53,10 @@ function GameViewer({ gameResults, sessionUser, game }) {
 						<div>
 							<h2>{gameResult.name}</h2>
 							<img key={gameResult.id} src={gameResult.background_image} alt="screenshot of game" />
+							<p>What Level Are You In?</p>
+							<input className="gamecard-notebox" onChange={handleLevelData} type="text" />
 							<p>Type in your game note here.</p>
-							<input className="gamecard-textbox" onChange={handleLevelData} type="text" />
+							<input className="gamecard-textbox" onChange={handleGameNote} type="text" />
 							<p>Paste an image of the level you're in.</p>
 							<input className="gamecard-imagebox" onChange={handleImageInput} type="text" />
 							<p>Submit that sucker!</p>
