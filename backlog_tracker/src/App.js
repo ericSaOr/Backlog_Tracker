@@ -10,7 +10,7 @@ import GameCard from './Gamecard';
 import About from './About';
 import GameViewer from './GameViewer';
 
-function App() {
+const App = () => {
 	const [ errors, setErrors ] = useState(false);
 	const [ sessionUser, setSessionUser ] = useState(false);
 	const history = useHistory();
@@ -21,6 +21,8 @@ function App() {
 	const [ gameResults, setGameResults ] = useState({});
 	const [ game, setGame ] = useState({});
 	const [ isGame, setIsGame ] = useState(false);
+	const [ gameCard, setGamecard ] = useState([]);
+	const [ isGamecard, setIsgamecard ] = useState(false);
 	console.log(sessionUser);
 
 	useEffect(() => {
@@ -64,6 +66,7 @@ function App() {
 			});
 		return 0;
 	}
+	//creating the session w/some error handling
 
 	console.log(user);
 
@@ -73,6 +76,7 @@ function App() {
 		}).then(handleSignOut());
 		return 0;
 	}
+	//deleting the session
 
 	{
 		sessionUser ? history.push('/gamecontainer') : history.push('/');
@@ -116,17 +120,26 @@ function App() {
 					/>
 				</Route>,
 				<Route exact path="/gamecard">
-					<GameCard />
+					<GameCard game={game} gameCard={gameCard} />
 				</Route>
 				<Route exact path="/About">
 					<About />
 				</Route>
 				<Route exact path="/gameviewer">
-					<GameViewer game={game} user={user} gameResults={gameResults} sessionUser={sessionUser} />
+					<GameViewer
+						game={game}
+						user={user}
+						gameResults={gameResults}
+						sessionUser={sessionUser}
+						gameCard={gameCard}
+						setGamecard={setGamecard}
+						isGamecard={isGamecard}
+						setIsgamecard={setIsgamecard}
+					/>
 				</Route>
 			</Switch>
 		</div>
 	);
-}
+};
 
 export default App;

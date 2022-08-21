@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-function GameViewer({ gameResults, game, sessionUser }) {
+const GameViewer = ({ gameResults, game, sessionUser, gameCard, setGamecard, setIsgamecard, isGamecard }) => {
 	const [ levelData, setLevelData ] = useState('');
 	const [ gameImage, setGameImage ] = useState('');
 	const [ gameNote, setGameNote ] = useState('');
-	const [ gameCard, setGamecard ] = useState([]);
+
+	const history = useHistory();
 	const gameId = game.id;
 	console.log(gameId);
 
@@ -43,6 +45,11 @@ function GameViewer({ gameResults, game, sessionUser }) {
 		})
 			.then((res) => res.json())
 			.then((json) => setGamecard(json));
+		setIsgamecard(true);
+	}
+
+	{
+		isGamecard ? history.push('/gamecard') : console.log('no gamecard');
 	}
 	console.log(gameCard);
 	return (
@@ -69,6 +76,6 @@ function GameViewer({ gameResults, game, sessionUser }) {
 			)}
 		</div>
 	);
-}
+};
 
 export default GameViewer;

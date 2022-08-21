@@ -3,7 +3,7 @@ import React from 'react'
 
 
 
-function Login({handleSignIn, username, setUsername, password, setPassword}) {
+const Login =({handleSignIn, username, setUsername, password, setPassword}) => {
 
 	
 	
@@ -24,7 +24,7 @@ function Login({handleSignIn, username, setUsername, password, setPassword}) {
             <input type="submit" value='Login!'/>
 			
 			</form>
-            {/* {loginErrors?loginErrors.map(e =><div>{e}</div>):null} */}
+            
         </>
 	);
 }

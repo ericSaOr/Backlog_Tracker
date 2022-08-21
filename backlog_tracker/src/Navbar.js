@@ -10,11 +10,11 @@ const linkStyles = {
 	color: 'white'
 };
 
-function NavBar({ sessionUser, logOut }) {
+const NavBar = ({ sessionUser, logOut }) => {
 	console.log(sessionUser.user_name);
 	return (
 		<div>
-			<h3>Welcome, Username:{sessionUser.user_name}</h3>
+			<h3>Welcome, Username: {sessionUser.user_name} </h3>
 			<NavLink
 				to="/"
 				exact
@@ -51,6 +51,6 @@ function NavBar({ sessionUser, logOut }) {
 			</header>
 		</div>
 	);
-}
+};
 
 export default NavBar;

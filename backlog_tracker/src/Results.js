@@ -1,15 +1,6 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
-function Results({ game, gameResults, handleAddGame }) {
-	const history = useHistory();
-	console.log(game);
-
-	// {
-	// 	handleAddGame ? history.push('/gamecontainer') : history.push('/');
-	// 	//conditionally rendering components based on the session.
-	// }
-
+const Results = ({ gameResults, handleAddGame }) => {
 	return (
 		<div className="game-results-container">
 			{gameResults.results ? (
@@ -18,7 +9,7 @@ function Results({ game, gameResults, handleAddGame }) {
 						<div>
 							<h2>{gameResult.name}</h2>
 							<img key={gameResult.id} src={gameResult.background_image} alt="screenshot of game" />
-							<button onClick={(() => handleAddGame())}>Add Game</button>
+							<button onClick={() => handleAddGame()}>Add Game</button>
 						</div>
 					);
 				})
@@ -27,5 +18,5 @@ function Results({ game, gameResults, handleAddGame }) {
 			)}
 		</div>
 	);
-}
+};
 export default Results;

@@ -2,7 +2,16 @@ import React, { useState } from 'react';
 import Results from './Results';
 import { useHistory } from 'react-router-dom';
 
-function GameContainer({ sessionUser, handleAddGame, gameResults, setGameResults, game, setGame, setIsGame, isGame }) {
+const GameContainer = ({
+	sessionUser,
+	handleAddGame,
+	gameResults,
+	setGameResults,
+	game,
+	setGame,
+	setIsGame,
+	isGame
+}) => {
 	//
 	const [ searchTerm, setSearchTerm ] = useState('');
 	const [ gamePresent, setGamePresent ] = useState(false);
@@ -68,6 +77,6 @@ function GameContainer({ sessionUser, handleAddGame, gameResults, setGameResults
 			<Results gameResults={gameResults} sessionUser={sessionUser} game={game} handleAddGame={handleAddGame} />
 		</div>
 	);
-}
+};
 
 export default GameContainer;
